@@ -14,7 +14,18 @@ class MovieRepository{
     public function getAll():array
     {
         $pdo = $this->database->getConnection();
-        $stmt = $pdo->query('SELECT * FROM movies.movie limit 5');
+        $stmt = $pdo->query('SELECT * FROM movies.movie limit 12');
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getByPage(string $page):array
+    {
+        $offset = ($page - 1) * 12;
+        $sql = 'SELECT * FROM movies.movie LIMIT 12 offset :offset';
+        $pdo = $this->database->getConnection();
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -27,6 +38,8 @@ class MovieRepository{
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
        }
+
+       
 
     public function create(array $data): string 
     {

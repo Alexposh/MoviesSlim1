@@ -63,11 +63,13 @@ $app->group('/api', function (RouteCollectorProxy $group) {
 });
 
 $app->group('/api', function (RouteCollectorProxy $group) {
-    $group->get('/movie', MovieIndex::class);
+    $group->get('/movie', MovieIndex::class);    
     $group->get('/movie/{segment:[a-z]+}', MovieIndexFiltered::class);
+    $group->get('/movie/p/{page:[0-9]+}', Movies::class . ':getPage');
     $group->post('/movie', Movies::class . ':create');
 
     $group->group('', function (RouteCollectorProxy $group) {
+        
         $group->get('/movie/{id:[0-9]+}', Movies::class . ':show');
         $group->patch('/movie/{id:[0-9]+}', Movies::class . ':update');
         $group->delete('/movie/{id:[0-9]+}', Movies::class . ':delete');

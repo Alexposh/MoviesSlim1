@@ -39,6 +39,18 @@ class Movies
         return $response;
     }
 
+    public function getPage(Request $request, Response $response, string $page): Response
+    {
+        $movie = $request->getAttribute('movie');
+
+        $page = $this->repository->getByPage($page);
+
+        $body =json_encode($page);       
+        $response->getBody()->write($body);
+
+        return $response;
+    }
+
     public function create(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();   
