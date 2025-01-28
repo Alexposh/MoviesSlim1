@@ -14,6 +14,13 @@ class GenreRepository{
     public function getAll():array
     {
         $pdo = $this->database->getConnection();
+        $stmt = $pdo->query('SELECT * FROM movies.genre');
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getHomeSegment():array
+    {
+        $pdo = $this->database->getConnection();
         $stmt = $pdo->query('SELECT * FROM movies.genre limit 5');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

@@ -18,6 +18,7 @@ use App\Controllers\MovieIndexFiltered;
 use App\Controllers\PersonIndexFiltered;
 use App\Controllers\Movies;
 use App\Controllers\Genres;
+use App\Controllers\GenreIndexHome;
 use App\Controllers\Persons;
 use App\Middleware\GetGenre; 
 use App\Middleware\GetMovie;
@@ -52,6 +53,7 @@ $app->get('/hello', function (Request $request, Response $response) {
 
 $app->group('/api', function (RouteCollectorProxy $group) {
     $group->get('/categories', GenreIndex::class);
+    $group->get('/categories/home', GenreIndexHome::class);
     $group->post('/categories', Genres::class . ':create');
 
     $group->group('', function (RouteCollectorProxy $group) {
