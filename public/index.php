@@ -17,6 +17,7 @@ use App\Controllers\PersonIndex;
 use App\Controllers\MovieIndexFiltered;
 use App\Controllers\PersonIndexFiltered;
 use App\Controllers\Movies;
+use App\Controllers\Actors;
 use App\Controllers\Genres;
 use App\Controllers\GenreIndexHome;
 use App\Controllers\Persons;
@@ -64,6 +65,12 @@ $app->group('/api', function (RouteCollectorProxy $group) {
     
 });
 
+$app->get('/api/moviesearch/{name:[a-z]+}', Movies::class . ':getMoviesByName');
+// function (Request $request, Response $response) {
+//     $response->getBody()->write("Hello");
+//     return $response;
+// });
+
 $app->group('/api', function (RouteCollectorProxy $group) {
     $group->get('/movie', MovieIndex::class);    
     $group->get('/movie/{segment:[a-z]+}', MovieIndexFiltered::class);
@@ -92,5 +99,15 @@ $app->group('/api', function (RouteCollectorProxy $group) {
     
 });
 
+$app->group('/api', function (RouteCollectorProxy $group) {
+    $group->get('/moviecast/{movie:[0-9]+}/{page:[0-9]+}', Actors::class . ':getPage');
+   
+    // $group->group('', function (RouteCollectorProxy $group) {        
+    //     $group->get('/actors/{id:[0-9]+}', Actors::class . ':show');
+    // })->add(GetActor::class);
+
+    // api/actors/${actorId}
+    
+});
 
 $app->run(); 

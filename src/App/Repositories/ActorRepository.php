@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Database;
 use PDO;
 
-class PersonRepository{
+class ActorRepository{
 
     public function __construct(private Database $database){
 
@@ -14,7 +14,7 @@ class PersonRepository{
     public function getAll():array
     {
         $pdo = $this->database->getConnection();
-        $stmt = $pdo->query('SELECT * FROM movies.person limit 5');
+        $stmt = $pdo->query('SELECT movie_cast.person_id, movie_cast.character_name, person_name, person.image FROM movies.movie_cast join person on movie_cast.person_id = person.person_id where movie_id = 22 limit 50;');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -72,19 +72,14 @@ class PersonRepository{
         return $stmt->rowCount();
     }
 
-    public function getJob(string $job):array |bool
+    public function getMovieCast(string $movie_id):array |bool
     {
-        if ($job == 'actor') {
-            $sql = 'SELECT movie_cast.person_id, movie_cast.character_name, person_name, person.image FROM movies.movie_cast join person on movie_cast.person_id = person.person_id where movie_id = 22 limit 24;';
-        }
-
-        if ($job == 'director') {
-            $sql = 'SELECT movie_crew.person_id, person_name FROM movie_crew join person on movie_crew.person_id = person.person_id where movie_crew.job = "Director" limit 10;';
-        }
-                
+        $sql = 'SELECT * FROM movies.movie_cast join person on movie_cast.person_id = person.person_id where movie_id = :movie_id limit 50;';
+        
         $pdo = $this->database->getConnection();
         $stmt = $pdo->prepare($sql);
-       
+
+        $stmt->bindValue(':movie_id', $movie_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
        }

@@ -5,36 +5,29 @@ namespace App\Repositories;
 use App\Database;
 use PDO;
 
-class MovieRepository{
+class MovieActorsRepository{
 
     public function __construct(private Database $database){
 
     }   
     
-    public function getAll():array
+    public function getAll($movie_id):array
     {
         $pdo = $this->database->getConnection();
-        $stmt = $pdo->query('SELECT * FROM movies.movie limit 12');
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getNamesOfMovies($name):array
-    {
-        $pdo = $this->database->getConnection();
-        $stmt = $pdo->prepare('SELECT * FROM movies.movie where title LIKE :name;');
-        $searchName = '%' . $name . '%';
-        $stmt->bindValue(':name', $searchName, PDO::PARAM_STR);
+        $stmt = $pdo->query('SELECT * FROM movies.movie_cast join person on movie_cast.person_id = person.person_id where movie_id = :movie_id;');
+        $stmt->bindValue(':movie_id', $movie_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getByPage(string $page):array
+    public function getByPage(string $movie_id, string $page):array
     {
         $offset = ($page - 1) * 12;
-        $sql = 'SELECT * FROM movies.movie LIMIT 12 offset :offset';
+        $sql = 'SELECT * FROM movies.movie_cast join person on movie_cast.person_id = person.person_id where movie_id = :movie_id LIMIT 12 offset :offset';
         $pdo = $this->database->getConnection();
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':movie_id', $movie_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

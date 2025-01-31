@@ -6,21 +6,33 @@ namespace App\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use PSR\Http\Message\ResponseInterface as Response;
-use App\Repositories\PersonRepository;
+use App\Repositories\MovieActorsRepository;
 use Valitron\Validator;
 
-class Persons
+class Actors
 {
-    public function __construct(private PersonRepository $repository, private Validator $validator)
+    public function __construct(private MovieActorsRepository $repository, private Validator $validator)
     {
         $this->validator->mapFieldsRules([            
             'person_id'=>['required', 'integer', ['min', 1]],
             'person_name'=>['required']            
         ]);
     }
+
+    public function getPage(Request $request, Response $response, string $id, string $page): Response
+    {
+        $movie = $request->getAttribute('movie');
+      
+        $pageCollected = $this->repository->getByPage($id, $page);
+
+        $body =json_encode($pageCollected);       
+        $response->getBody()->write($body);
+
+        return $response;
+    }
     public function show(Request $request, Response $response, string $id): Response
     {
-        $person = $request->getAttribute('person');
+        $person = $request->getAttribute('actors');
 
         $body =json_encode($person);       
         $response->getBody()->write($body);
@@ -55,7 +67,7 @@ class Persons
             return $response->withStatus(422);}
 
         $rows = $this->repository->update($id, $body);
-        $body = json_encode([ "message" => "Person updated"]);
+        $body = json_encode([ "message" => "Actor updated"]);
         $response->getBody()->write($body);
         return $response;
     }
@@ -63,9 +75,10 @@ class Persons
     public function delete(Request $request, Response $response, string $id): Response
     {
         $rows = $this->repository->delete($id);
-        $body = json_encode([ "message" => "Person deleted"]);
+        $body = json_encode([ "message" => "Actor deleted"]);
         $response->getBody()->write($body);
         return $response;
     }    
 
+    
 }
