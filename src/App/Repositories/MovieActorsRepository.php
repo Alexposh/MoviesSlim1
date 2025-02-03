@@ -14,8 +14,24 @@ class MovieActorsRepository{
     public function getAll($movie_id):array
     {
         $pdo = $this->database->getConnection();
-        $stmt = $pdo->query('SELECT * FROM movies.movie_cast join person on movie_cast.person_id = person.person_id where movie_id = :movie_id;');
-        $stmt->bindValue(':movie_id', $movie_id, PDO::PARAM_INT);
+        $stmt = $pdo->query('SELECT * FROM movies.movie_cast;');
+        // $stmt->bindValue(':movie_id', $movie_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Retrieves the cast list for a specific movie by its ID.
+     *
+     * @param mixed $movie_id The ID of the movie whose cast is to be retrieved.
+     * @return array An associative array containing the cast details.
+     */
+
+    public function getCast($movieId):array
+    {
+        $pdo = $this->database->getConnection();
+        $stmt = $pdo->prepare('SELECT * FROM movies.movie_cast join person on movie_cast.person_id = person.person_id where movie_id = :movie_id;');
+        $stmt->bindValue(':movie_id', $movieId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

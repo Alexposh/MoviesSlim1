@@ -14,18 +14,29 @@ class MovieRepository{
     public function getAll():array
     {
         $pdo = $this->database->getConnection();
-        $stmt = $pdo->query('SELECT * FROM movies.movie limit 12');
+        $stmt = $pdo->query('SELECT * FROM movies.movie limit 12;');
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getNamesOfMovies($name):array
     {
         $pdo = $this->database->getConnection();
-        $stmt = $pdo->prepare('SELECT * FROM movies.movie where title LIKE :name;');
+        $stmt = $pdo->prepare('SELECT movie_id, title  FROM movies.movie where title LIKE :name;');
         $searchName = '%' . $name . '%';
         $stmt->bindValue(':name', $searchName, PDO::PARAM_STR);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    
+    public function getMovieByName($name):array
+    {
+        $pdo = $this->database->getConnection();
+        $stmt = $pdo->prepare('SELECT * FROM movies.movie where title LIKE :name;');
+        $searchName = '%' . $name . '%';
+        $stmt->bindValue(':name', $searchName, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function getByPage(string $page):array

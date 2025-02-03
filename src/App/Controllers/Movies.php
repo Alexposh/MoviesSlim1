@@ -63,6 +63,17 @@ class Movies
 
         return $response;
     }
+    public function getSingleMovieByName(Request $request, Response $response, string $name): Response
+    {
+        // $movie = $request->getAttribute('moviesearch');
+
+        $foundMovie = $this->repository->getMovieByName($name);
+
+        $body =json_encode($foundMovie);       
+        $response->getBody()->write($body);
+
+        return $response;
+    }
     public function create(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();   

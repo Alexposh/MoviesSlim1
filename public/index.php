@@ -66,6 +66,8 @@ $app->group('/api', function (RouteCollectorProxy $group) {
 });
 
 $app->get('/api/moviesearch/{name:[a-z]+}', Movies::class . ':getMoviesByName');
+$app->get('/api/moviename/{name:[a-z]+}', Movies::class . ':getSingleMovieByName');
+$app->get('/api/moviecast/{movie:[0-9]+}', Actors::class . ':getMovieCast');
 // function (Request $request, Response $response) {
 //     $response->getBody()->write("Hello");
 //     return $response;
@@ -99,15 +101,15 @@ $app->group('/api', function (RouteCollectorProxy $group) {
     
 });
 
-$app->group('/api', function (RouteCollectorProxy $group) {
-    $group->get('/moviecast/{movie:[0-9]+}/{page:[0-9]+}', Actors::class . ':getPage');
+// $app->group('/api', function (RouteCollectorProxy $group) {
+//     $group->get('/moviecast/{movie:[0-9]+}/{page:[0-9]+}', Actors::class . ':getPage');
    
-    // $group->group('', function (RouteCollectorProxy $group) {        
-    //     $group->get('/actors/{id:[0-9]+}', Actors::class . ':show');
-    // })->add(GetActor::class);
+//     // $group->group('', function (RouteCollectorProxy $group) {        
+//     //     $group->get('/actors/{id:[0-9]+}', Actors::class . ':show');
+//     // })->add(GetActor::class);
 
-    // api/actors/${actorId}
+//     // api/actors/${actorId}
     
-});
+// });
 
 $app->run(); 

@@ -30,6 +30,16 @@ class Actors
 
         return $response;
     }
+
+    public function getMovieCast(Request $request, Response $response, string $movieId): Response
+    {
+        $movieCast= $this->repository->getCast($movieId);
+
+        $body =json_encode($movieCast);       
+        $response->getBody()->write($body);
+
+        return $response;
+    }
     public function show(Request $request, Response $response, string $id): Response
     {
         $person = $request->getAttribute('actors');
